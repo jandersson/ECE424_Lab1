@@ -1,6 +1,6 @@
 __author__ = 'Jonas Andersson'
 
-from Tkinter import *  # get widget classes
+from tkinter import *  # get widget classes
 
 #Initialize Global State
 logged_in = False
@@ -24,15 +24,28 @@ class Login:
         #Populate options (in a logged out state)
         #Register event handlers
         file.add_command(label='Save', command=self.save, underline=0, state='disabled')
-        account.add_command(label='Log-In', command=self.login(master), underline=0, state='active')
+        account.add_command(label='Log-In', command=lambda:self.login(master), underline=0, state='active')
         account.add_command(label='Log-Out', command=self.logout, underline=0, state='disabled')
 
     def login(self, master):
         #Handler for the login event
         loginwindow = Toplevel(master)
-        user_entry = Entry(loginwindow)
+
+        username = StringVar()
+        user_entry = Entry(loginwindow, textvariable=username)
         user_entry.pack()
+
+        password = StringVar()
+        password_entry = Entry(loginwindow, textvariable=password)
+        password_entry.pack()
+
+        login_btn = Button(loginwindow, text='Login', command=lambda:self.verify(username,"Logged in!"))
+        login_btn.pack()
+        cancel_btn = Button(loginwindow, text='Cancel')
+        cancel_btn.pack()
+
         loginwindow.wait_window()
+
 
     def makeform(self, root, fields):
         ### Write your code here###
@@ -48,7 +61,7 @@ class Login:
 
     def verify(self, entries, dialog):
         ### Write your code here###
-        pass
+        print(dialog + entries)
 
 # def makemenu(win, cond):
 #     if not cond:
@@ -61,8 +74,9 @@ class Login:
 if __name__ == '__main__':
 
     root = Tk()  # or Toplevel()
+    root.title('ECE424_Lab1')  # set window-mgr info
     lab1 = Login(root)
-    # root.title('ECE424_Lab1')  # set window-mgr info
+
     # makemenu(root, False)  # associate a menu bar
     root.mainloop()
     root.destroy()
