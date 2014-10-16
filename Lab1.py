@@ -36,7 +36,7 @@ class Login:
         #Instantiate the frame and display it
         self.frame = Frame(master)
         self.frame.pack()
-
+        master.title('ECE424_Lab1')
         #Create options menu bar
         menu_bar = Menu(master)
         master.config(menu=menu_bar)
@@ -102,9 +102,7 @@ class Login:
 if __name__ == '__main__':
 
     root = Tk()  # or Toplevel()
-    root.title('ECE424_Lab1')  # set window-mgr info
     lab1 = Login(root)
-
     # makemenu(root, False)  # associate a menu bar
     root.mainloop()
     root.destroy()
