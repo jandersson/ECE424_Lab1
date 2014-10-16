@@ -5,13 +5,38 @@ from tkinter import *  # get widget classes
 #Initialize Global State
 logged_in = False
 
+class DialogBox(Toplevel):
+
+    def __init__(self, parent, title = None):
+        Toplevel.__init__(self, parent)
+        self.transient(parent)
+
+        if title:
+            self.title(title)
+
+        body = Frame(self)
+        self.body()
+        body.pack(padx=5, pady=5)
+
+
+        self.wait_window(self)
+
+    def body(self):
+        user_entry = Entry(self)
+        user_entry.bind('<Return>', (lambda:self.verify))
+        user_entry.pack()
+
+    def verify(self):
+        username = self.user_entry.get()
+        print(username)
+
 class Login:
 
     def __init__(self, master):
 
         #Instantiate the frame and display it
-        frame = Frame(master)
-        frame.pack()
+        self.frame = Frame(master)
+        self.frame.pack()
 
         #Create options menu bar
         menu_bar = Menu(master)
@@ -29,25 +54,27 @@ class Login:
 
     def login(self, master):
         #Handler for the login event
-        loginwindow = Toplevel(master)
+        self.login_window = Toplevel(master)
+        self.login_window.title('Login')
 
-        username = StringVar()
-        user_entry = Entry(loginwindow, textvariable=username)
-        user_entry.pack()
+        self.user_entry = Entry(self.login_window)
+        self.user_entry.bind('<Return>', (lambda x: self.verify()))
+        self.user_entry.pack()
 
-        password = StringVar()
-        password_entry = Entry(loginwindow, textvariable=password)
-        password_entry.pack()
+        self.password_entry = Entry(self.login_window)
+        self.password_entry.bind('<Return>', (lambda x: self.verify()))
+        self.password_entry.pack()
 
-        login_btn = Button(loginwindow, text='Login', command=lambda:self.verify(username,"Logged in!"))
-        login_btn.pack()
-        cancel_btn = Button(loginwindow, text='Cancel')
-        cancel_btn.pack()
+        self.login_btn = Button(self.login_window, text='Login', command=lambda: self.verify())
+        self.login_btn.pack()
 
-        loginwindow.wait_window()
+        self.cancel_btn = Button(self.login_window, text='Cancel', command=self.login_window.destroy)
+        self.cancel_btn.pack()
+
+        self.login_window.wait_window()
 
 
-    def makeform(self, root, fields):
+    def make_form(self, root, fields):
         ### Write your code here###
         pass
 
@@ -59,9 +86,11 @@ class Login:
         ### Write your code here###
         pass
 
-    def verify(self, entries, dialog):
-        ### Write your code here###
-        print(dialog + entries)
+    def verify(self):
+        username = self.user_entry.get()
+        password = self.password_entry.get()
+        print(username)
+
 
 # def makemenu(win, cond):
 #     if not cond:
