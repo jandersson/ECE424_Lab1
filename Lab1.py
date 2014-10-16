@@ -18,7 +18,6 @@ class DialogBox(Toplevel):
         self.body()
         body.pack(padx=5, pady=5)
 
-
         self.wait_window(self)
 
     def body(self):
