@@ -58,15 +58,21 @@ class Login:
             file.add_command(label='Save', command=self.save, underline=0, state='disabled')
             account.add_command(label='Log-In', command=lambda:self.login(self.master), underline=0, state='active')
             account.add_command(label='Log-Out', command=self.logout, underline=0, state='disabled')
-
+        if logged_in:
+            file.add_command(label='Save', command=self.save, underline=0, state='active')
+            account.add_command(label='Log-In', command=lambda:self.login(self.master), underline=0, state='disabled')
+            account.add_command(label='Log-Out', command=self.logout, underline=0, state='active')
 
     def logout(self):
-        ### Write your code here###
-        pass
+        global logged_in
+        if messagebox.askyesno("Logout", "Logout?"):
+            logged_in = False
+            self.make_menu()
 
     def save(self):
-        ### Write your code here###
-        pass
+
+        if messagebox.askyesno("Save", "Save?"):
+            self.master.destroy()
 
     def verify(self):
         global logged_in
@@ -76,23 +82,12 @@ class Login:
             logged_in = True
             messagebox.showinfo("Logged In", "You have successfully logged in")
             self.login_window.destroy()
+            self.make_menu()
         else:
             messagebox.showerror("Invalid Name/ID", "You have entered an invalid Name/ID, please try again")
-
-
-# def makemenu(win, cond):
-#     if not cond:
-#
-#     else:
-#         file.add_command(label='Save', command=save, underline=0, state='active')
-#         account.add_command(label='Log-In', command=login, underline=0, state='disabled')
-#         account.add_command(label='Log-Out', command=logout, underline=0, state='active')
 
 if __name__ == '__main__':
 
     root = Tk()  # or Toplevel()
     lab1 = Login(root)
-    # makemenu(root, False)  # associate a menu bar
     root.mainloop()
-    root.destroy()
-
