@@ -3,19 +3,16 @@ __author__ = 'Jonas Andersson'
 from tkinter import *  # get widget classes
 from tkinter import messagebox
 
-#Initialize Global State
-logged_in = False
-
 class Login:
 
     def __init__(self, master):
         self.master = master
+        self.logged_in = False
         #Instantiate the frame and display it
         self.frame = Frame(self.master)
         self.frame.pack()
         self.master.title('ECE424_Lab1')
         self.make_menu()
-
 
     def login(self, master):
         #Display the login window
@@ -54,19 +51,18 @@ class Login:
 
         #Populate options (in a logged out state)
         #Register event handlers
-        if not logged_in:
+        if not self.logged_in:
             file.add_command(label='Save', command=self.save, underline=0, state='disabled')
             account.add_command(label='Log-In', command=lambda:self.login(self.master), underline=0, state='active')
             account.add_command(label='Log-Out', command=self.logout, underline=0, state='disabled')
-        if logged_in:
+        if self.logged_in:
             file.add_command(label='Save', command=self.save, underline=0, state='active')
             account.add_command(label='Log-In', command=lambda:self.login(self.master), underline=0, state='disabled')
             account.add_command(label='Log-Out', command=self.logout, underline=0, state='active')
 
     def logout(self):
-        global logged_in
         if messagebox.askyesno("Logout", "Logout?"):
-            logged_in = False
+            self.logged_in = False
             self.make_menu()
 
     def save(self):
@@ -75,11 +71,10 @@ class Login:
             self.master.destroy()
 
     def verify(self):
-        global logged_in
         username = str(self.user_entry.get())
         password = str(self.password_entry.get())
         if (username == "test") and (password == "1234"):
-            logged_in = True
+            self.logged_in = True
             messagebox.showinfo("Logged In", "You have successfully logged in")
             self.login_window.destroy()
             self.make_menu()
