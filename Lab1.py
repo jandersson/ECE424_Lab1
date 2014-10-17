@@ -54,21 +54,35 @@ class Login:
     def login(self, master):
         #Handler for the login event
         self.login_window = Toplevel(master)
-        self.login_window.title('Login')
+        self.login_window.title('Log-In')
+
+        self.username_label = Label(self.login_window, text="Name")
+        self.username_label.grid(column=0, row=0)
+        self.username_label.pack()
 
         self.user_entry = Entry(self.login_window)
         self.user_entry.bind('<Return>', (lambda x: self.verify()))
+        self.user_entry.grid(column=1, row=0)
         self.user_entry.pack()
+
+        self.ID_label = Label(self.login_window, text="ID")
+        self.ID_label.grid(column=0, row=1)
+        self.ID_label.pack()
 
         self.password_entry = Entry(self.login_window)
         self.password_entry.bind('<Return>', (lambda x: self.verify()))
+        self.password_entry.grid(column=1, row=1)
         self.password_entry.pack()
 
         self.login_btn = Button(self.login_window, text='Login', command=lambda: self.verify())
+        self.login_btn.grid(column=0, row=2)
         self.login_btn.pack()
 
         self.cancel_btn = Button(self.login_window, text='Cancel', command=self.login_window.destroy)
+        self.login_btn.grid(column=1, row=2)
         self.cancel_btn.pack()
+
+
 
         self.login_window.wait_window()
 
@@ -86,9 +100,15 @@ class Login:
         pass
 
     def verify(self):
-        username = self.user_entry.get()
-        password = self.password_entry.get()
-        print(username)
+        global logged_in
+        username = str(self.user_entry.get())
+        password = str(self.password_entry.get())
+        if (username == "test") and (password == "1234"):
+            logged_in = True
+            print("Successfully Logged in!")
+            self.login_window.destroy()
+        else:
+            print("That is not a valid username/password")
 
 
 # def makemenu(win, cond):
