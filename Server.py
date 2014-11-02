@@ -1,4 +1,4 @@
-__author__ = 'Jonas'
+__author__ = 'Jonas Andersson'
 
 import time, _thread as thread
 from socket import *
@@ -59,6 +59,6 @@ def loadMeasures(connection):
 ####################################
 
 def start_server():
-    thread.start_new_thread(makeWindow, ('ECE424_Lab2_Server',))
+    thread.start_new_thread(makeWindow, ('Server',))
     dispatcher()
 
