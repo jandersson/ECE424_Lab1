@@ -1,6 +1,6 @@
 __author__ = 'Jonas Andersson'
 
-import _thread as thread
+import _thread as thread, socket
 from tkinter import *  # get widget classes
 from tkinter import messagebox
 import Server
@@ -15,6 +15,7 @@ class Login:
         self.frame.pack()
         self.master.title('Client')
         self.make_menu()
+        self.open_connection()
 
     def login(self, master):
         #Display the login window
@@ -121,6 +122,14 @@ class Login:
 
     def send_measurement(self):
         pass
+
+    def open_connection(self):
+        #Create Socket object
+        sockobj = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        #Connect
+        sockobj.connect(('127.0.0.1', 50007))
+        print('Socket created')
+
 
 def makeWindow(myTitle):
     root = Tk()
