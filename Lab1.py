@@ -2,6 +2,7 @@ __author__ = 'Jonas Andersson'
 
 from tkinter import *  # get widget classes
 from tkinter import messagebox
+import Server
 
 class Login:
 
@@ -48,6 +49,8 @@ class Login:
         menu_bar.add_cascade(label='File', menu=file, underline=0)
         account = Menu(menu_bar)
         menu_bar.add_cascade(label='Account', menu=account, underline=0)
+        measure = Menu(menu_bar)
+        menu_bar.add_cascade(label='Measure', menu = measure, underline=0)
 
         #Populate options (in a logged out state)
         #Register event handlers
@@ -83,6 +86,8 @@ class Login:
 
 if __name__ == '__main__':
 
+
     root = Tk()  # or Toplevel()
     lab1 = Login(root)
     root.mainloop()
+    Server.start_server()

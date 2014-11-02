@@ -58,6 +58,7 @@ def loadMeasures(connection):
     return
 ####################################
 
-thread.start_new_thread(makeWindow, ('ECE424_Lab2_Server',))
-dispatcher()
+def start_server():
+    thread.start_new_thread(makeWindow, ('ECE424_Lab2_Server',))
+    dispatcher()
 
