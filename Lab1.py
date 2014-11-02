@@ -58,10 +58,14 @@ class Login:
             file.add_command(label='Save', command=self.save, underline=0, state='disabled')
             account.add_command(label='Log-In', command=lambda:self.login(self.master), underline=0, state='active')
             account.add_command(label='Log-Out', command=self.logout, underline=0, state='disabled')
+            measure.add_command(label='Current', underline=0, state='disabled')
+            measure.add_command(label='Last', underline=0, state='disabled')
         if self.logged_in:
             file.add_command(label='Save', command=self.save, underline=0, state='active')
             account.add_command(label='Log-In', command=lambda:self.login(self.master), underline=0, state='disabled')
             account.add_command(label='Log-Out', command=self.logout, underline=0, state='active')
+            measure.add_command(label='Current', command=lambda:self.measure(self.master), underline=0, state='active')
+            measure.add_command(label='Last', underline=0, state='active')
 
     def logout(self):
         if messagebox.askyesno("Logout", "Logout?"):
@@ -84,10 +88,32 @@ class Login:
         else:
             messagebox.showerror("Invalid Name/ID", "You have entered an invalid Name/ID, please try again")
 
+    def measure(self, master):
+        self.measure_window = Toplevel(master)
+        self.measure_window.title('Measurement')
+
+        #Create Labels
+        self.height_label = Label(self.measure_window, text='Height')
+        self.height_label.grid(column=0, row=0)
+        self.weight_label = Label(self.measure_window, text='Weight')
+        self.weight_label.grid(column=0, row= 1)
+        self.bp_label = Label(self.measure_window, text='Blood Pressure')
+        self.bp_label.grid(column=0, row=2)
+
+        #Create Entries
+        self.height_entry = Entry(self.measure_window)
+        self.height_entry.grid(column=1, row=0)
+        self.weight_entry = Entry(self.measure_window)
+        self.weight_entry.grid(column=1, row=1)
+        self.bp_entry = Entry(self.measure_window)
+        self.bp_entry.grid(column=1, row=2)
+
+        self.measure_window.wait_window()
+
 if __name__ == '__main__':
 
 
     root = Tk()  # or Toplevel()
     lab1 = Login(root)
     root.mainloop()
-    Server.start_server()
+    #Server.start_server()
