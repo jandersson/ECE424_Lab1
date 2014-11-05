@@ -1,6 +1,7 @@
 __author__ = 'Jonas Andersson'
 
 import time, _thread as thread
+import json  #handles serializing and sending/receiving JSON data
 from socket import *
 from tkinter import *
 
@@ -18,9 +19,19 @@ def now():
 def handleClient(connection):
     while True:
         data = connection.recv(1024).decode()
-
         if not data: break
-        reply='Lab2_echo--'+data
+        #reply='Lab2_echo--'+data
+        data = json.loads(data)
+
+        #inspect data header and determine action
+        if data['header'] == 'measurements':
+            with open("test.txt", "w") as outfile:
+                json.dump(data, outfile, indent=4)
+                reply = data
+        if data['header'] == 'get measurements':
+            reply = loadMeasures()
+            with open(data['username'] + '.txt', "r") as measurements:
+                user_measurements = json.loads(measurements)
         connection.send(reply.encode())
 ####################################
 
@@ -35,7 +46,6 @@ def dispatcher():
     while True:
         connection, address = sockobj.accept()
         print('Server connected by', address,'at', now())
-
         thread.start_new_thread(handleClient, (connection,))
 ####################################
 

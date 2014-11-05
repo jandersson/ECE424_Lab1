@@ -4,6 +4,7 @@ import _thread as thread, socket
 from tkinter import *  # get widget classes
 from tkinter import messagebox
 import Server
+import json #used for serializing data for socket buffer
 
 class Login:
 
@@ -15,7 +16,13 @@ class Login:
         self.frame.pack()
         self.master.title('Client')
         self.make_menu()
-        self.open_connection()
+        self.measurement = {'header' : 'measurements',
+                            'height' : None,
+                            'weight' : None,
+                            'blood pressure' : None}
+        self.login_info = {'header' : 'login info',
+                           'username' : None,
+                           'password' : None}
 
     def login(self, master):
         #Display the login window
@@ -75,14 +82,13 @@ class Login:
             self.make_menu()
 
     def save(self):
-
         if messagebox.askyesno("Save", "Save?"):
             self.master.destroy()
 
     def verify(self):
-        username = str(self.user_entry.get())
-        password = str(self.password_entry.get())
-        if (username == "test") and (password == "1234"):
+        self.login_info['username'] = str(self.user_entry.get())
+        self.login_info['password'] = str(self.password_entry.get())
+        if (self.login_info['username'] == "test") and (self.login_info['password'] == "1234"):
             self.logged_in = True
             messagebox.showinfo("Logged In", "You have successfully logged in")
             self.login_window.destroy()
@@ -111,40 +117,57 @@ class Login:
         self.bp_entry.grid(column=1, row=2)
 
         #Create Buttons
-        self.enter_button = Button(self.measure_window, text='Enter', command=lambda:self.send_measurement)
+        self.enter_button = Button(self.measure_window, text='Enter', command=lambda:self.send_measurement())
         self.enter_button.grid(column=0, row =3)
         self.cancel_button = Button(self.measure_window, text='Cancel', command=lambda:self.measure_window.destroy())
         self.cancel_button.grid(column=1, row=3)
         self.measure_window.wait_window()
 
     def get_measurement(self):
+        sock = self.open_connection()
+        sock.send({'username' : self.login_info['username'],
+                   'header' : 'get measurement'})
         messagebox.showinfo('Measurement', 'Name:\n' + 'Height:\n' + 'Weight:\n' + 'Blood Pressure:\n')
 
+    def send_data(self, raw_data):
+        data = json.dumps(raw_data)
+        sock = self.open_connection()
+        sock.send(data.encode())
+        print("Data Sent")
+        sock.recv(1024)
+        sock.close()
+        return True
+
     def send_measurement(self):
-        pass
+        """This function gets a socket object from the open_connection function and then sends the measurement data"""
+        self.measurement['height'] = self.height_entry.get()
+        self.measurement['weight'] = self.weight_entry.get()
+        self.measurement['blood pressure'] = self.bp_entry.get()
+        self.send_data(self.measurement)
+        # data = json.dumps(self.measurement)
+        # sock = self.open_connection()
+        # sock.send(data.encode())
+        # print("Measurement data sent")
+        # reply = sock.recv(1024)
+        # print(reply)
+        # sock.close()
+        self.measure_window.destroy()
 
     def open_connection(self):
-        #Create Socket object
-        sockobj = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        #Connect
-        sockobj.connect(('127.0.0.1', 50007))
+        sockobj = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #Create a socket object
+        sockobj.connect(('127.0.0.1', 50007)) #Connect to server
         print('Socket created')
-
+        return sockobj
 
 def makeWindow(myTitle):
     root = Tk()
     lab1 = Login(root)
     root.title(myTitle)
-#    label1 = Label(root, text='Server is running!')
-#    label1.pack()
     root.mainloop()
 
 if __name__ == '__main__':
 
     thread.start_new_thread(makeWindow, ('Client',))
-    #root = Tk()  # or Toplevel()
-    #lab1 = Login(root)
-    #root.mainloop()
     Server.start_server()
 
 
