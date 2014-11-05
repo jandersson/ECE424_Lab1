@@ -15,6 +15,7 @@ class Login:
         self.frame.pack()
         self.master.title('Client')
         self.measurement = {'header' : 'measurements',
+                            'username' : None,
                             'height' : None,
                             'weight' : None,
                             'blood pressure' : None}
@@ -148,6 +149,7 @@ class Login:
         self.measurement['height'] = self.height_entry.get()
         self.measurement['weight'] = self.weight_entry.get()
         self.measurement['blood pressure'] = self.bp_entry.get()
+        self.measurement['username'] = self.login_info['username']
         self.send_data(self.measurement)
         self.measure_window.destroy()
 

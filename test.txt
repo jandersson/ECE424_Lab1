@@ -1,6 +1,33 @@
-{
-    "height": "5 foot 10 inches",
-    "weight": "160 lbs",
-    "header": "measurements",
-    "blood pressure": "infinite"
-}
+[
+    {
+        "header": "measurements",
+        "height": "test",
+        "weight": "1",
+        "blood pressure": "12",
+        "time": "Tue Nov  4 21:22:15 2014"
+    },
+    {
+        "header": "measurements",
+        "username": "test",
+        "blood pressure": "for testing",
+        "height": "new",
+        "weight": "entry",
+        "time": "Tue Nov  4 21:48:54 2014"
+    },
+    {
+        "header": "measurements",
+        "username": "test",
+        "blood pressure": "new test",
+        "height": "latest",
+        "weight": "entry",
+        "time": "Tue Nov  4 21:49:27 2014"
+    },
+    {
+        "header": "measurements",
+        "username": "test",
+        "blood pressure": "1 trillion",
+        "height": "1 million",
+        "weight": "1 billion",
+        "time": "Tue Nov  4 21:50:55 2014"
+    }
+]
