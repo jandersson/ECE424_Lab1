@@ -1,6 +1,6 @@
 {
+    "height": "5 foot 10 inches",
+    "weight": "160 lbs",
     "header": "measurements",
-    "weight": "there",
-    "blood pressure": "friend",
-    "height": "hello"
+    "blood pressure": "infinite"
 }

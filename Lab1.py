@@ -10,19 +10,19 @@ class Login:
 
     def __init__(self, master):
         self.master = master
-        self.logged_in = True
         #Instantiate the frame and display it
         self.frame = Frame(self.master)
         self.frame.pack()
         self.master.title('Client')
-        self.make_menu()
         self.measurement = {'header' : 'measurements',
                             'height' : None,
                             'weight' : None,
                             'blood pressure' : None}
         self.login_info = {'header' : 'login info',
                            'username' : None,
-                           'password' : None}
+                           'password' : None,
+                           'authenticated' : False}
+        self.make_menu()
 
     def login(self, master):
         #Display the login window
@@ -63,13 +63,13 @@ class Login:
 
         #Populate options (in a logged out state)
         #Register event handlers
-        if not self.logged_in:
+        if not self.login_info['authenticated']:
             file.add_command(label='Save', command=self.save, underline=0, state='disabled')
             account.add_command(label='Log-In', command=lambda:self.login(self.master), underline=0, state='active')
             account.add_command(label='Log-Out', command=self.logout, underline=0, state='disabled')
             measure.add_command(label='Current', underline=0, state='disabled')
             measure.add_command(label='Last', underline=0, state='disabled')
-        if self.logged_in:
+        if self.login_info['authenticated']:
             file.add_command(label='Save', command=self.save, underline=0, state='active')
             account.add_command(label='Log-In', command=lambda:self.login(self.master), underline=0, state='disabled')
             account.add_command(label='Log-Out', command=self.logout, underline=0, state='active')
@@ -78,7 +78,7 @@ class Login:
 
     def logout(self):
         if messagebox.askyesno("Logout", "Logout?"):
-            self.logged_in = False
+            self.login_info['authenticated'] = False
             self.make_menu()
 
     def save(self):
@@ -88,8 +88,9 @@ class Login:
     def verify(self):
         self.login_info['username'] = str(self.user_entry.get())
         self.login_info['password'] = str(self.password_entry.get())
-        if (self.login_info['username'] == "test") and (self.login_info['password'] == "1234"):
-            self.logged_in = True
+        reply = self.send_data(self.login_info)
+        if reply['authenticated'] == True:
+            self.login_info['authenticated'] = True
             messagebox.showinfo("Logged In", "You have successfully logged in")
             self.login_window.destroy()
             self.make_menu()
@@ -124,19 +125,23 @@ class Login:
         self.measure_window.wait_window()
 
     def get_measurement(self):
-        sock = self.open_connection()
-        sock.send({'username' : self.login_info['username'],
-                   'header' : 'get measurement'})
-        messagebox.showinfo('Measurement', 'Name:\n' + 'Height:\n' + 'Weight:\n' + 'Blood Pressure:\n')
+        measurements = self.send_data({'username' : self.login_info['username'],
+                   'header' : 'get measurements'})
+        messagebox.showinfo('Measurement', 'Name: ' + self.login_info['username'] +
+                            '\nHeight: ' + measurements['height'] +
+                            '\nWeight: ' + measurements['weight'] +
+                            '\nBlood Pressure: ' + measurements['blood pressure'])
 
     def send_data(self, raw_data):
         data = json.dumps(raw_data)
         sock = self.open_connection()
         sock.send(data.encode())
         print("Data Sent")
-        sock.recv(1024)
+        raw_reply = sock.recv(1024).decode()
+        reply = json.loads(raw_reply)
+        print('Reply received')
         sock.close()
-        return True
+        return reply
 
     def send_measurement(self):
         """This function gets a socket object from the open_connection function and then sends the measurement data"""
@@ -144,13 +149,6 @@ class Login:
         self.measurement['weight'] = self.weight_entry.get()
         self.measurement['blood pressure'] = self.bp_entry.get()
         self.send_data(self.measurement)
-        # data = json.dumps(self.measurement)
-        # sock = self.open_connection()
-        # sock.send(data.encode())
-        # print("Measurement data sent")
-        # reply = sock.recv(1024)
-        # print(reply)
-        # sock.close()
         self.measure_window.destroy()
 
     def open_connection(self):
