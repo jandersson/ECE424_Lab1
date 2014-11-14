@@ -109,7 +109,7 @@ class Login:
         self.login_info['username'] = str(self.user_entry.get())
         self.login_info['password'] = str(self.password_entry.get())
         reply = self.send_data(self.login_info)
-        if reply['authenticated'] == True:
+        if reply['authenticated']:
             self.login_info['authenticated'] = True
             try:
                 messagebox.showinfo("Logged In", "You have successfully logged in")
