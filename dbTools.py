@@ -10,5 +10,5 @@ def login():
     cursor = conn.cursor()
     return conn, cursor
 
-def make_tables(cursor):
+def make_users_table(cursor):
     cursor.execute(make_table_users_if_not_exists)

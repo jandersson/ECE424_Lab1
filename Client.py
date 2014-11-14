@@ -13,7 +13,6 @@ except ImportError:
     import tkMessageBox
 
 import socket
-
 import Server
 import json  # used for serializing data for socket buffer
 
@@ -77,16 +76,16 @@ class Login:
         #Register event handlers
         if not self.login_info['authenticated']:
             file.add_command(label='Save', command=self.save, underline=0, state='disabled')
-            account.add_command(label='Log-In', command=lambda:self.login(self.master), underline=0, state='active')
+            account.add_command(label='Log-In', command=lambda: self.login(self.master), underline=0, state='active')
             account.add_command(label='Log-Out', command=self.logout, underline=0, state='disabled')
             measure.add_command(label='Current', underline=0, state='disabled')
             measure.add_command(label='Last', underline=0, state='disabled')
         if self.login_info['authenticated']:
             file.add_command(label='Save', command=self.save, underline=0, state='active')
-            account.add_command(label='Log-In', command=lambda:self.login(self.master), underline=0, state='disabled')
+            account.add_command(label='Log-In', command=lambda: self.login(self.master), underline=0, state='disabled')
             account.add_command(label='Log-Out', command=self.logout, underline=0, state='active')
-            measure.add_command(label='Current', command=lambda:self.measure(self.master), underline=0, state='active')
-            measure.add_command(label='Last', command=lambda:self.get_measurement(), underline=0, state='active')
+            measure.add_command(label='Current', command=lambda: self.measure(self.master), underline=0, state='active')
+            measure.add_command(label='Last', command=lambda: self.get_measurement(), underline=0, state='active')
 
     def logout(self):
         try:

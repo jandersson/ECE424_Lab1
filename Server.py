@@ -13,8 +13,6 @@ try:
 except ImportError:
     from Tkinter import *
 
-def dblogin():
-
 
 def serve_forever():
     #TODO: remove import * for socket
@@ -46,10 +44,12 @@ def handleClient(connection):
             current_measures = loadMeasures(data['username'])
             current_measures.append(data)
             print('Message is measurements')
+            #TODO: Put this into database instead of flat file
             with open(data['username'] + ".txt", "w") as outfile:
                 json.dump(current_measures, outfile, indent=4)
                 reply = json.dumps(data)
         if data['header'] == 'get measurements':
+            #TODO: Get data from db instead of flat file
             print('Message is data request')
             measurements = loadMeasures(data['username'])
             #Get only the last item in the measurements list (the latest one)
