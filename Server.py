@@ -1,6 +1,7 @@
 __author__ = 'Jonas Andersson'
 
 import time
+import sqlite3
 try:
     import thread
 except ImportError:
@@ -13,9 +14,13 @@ except ImportError:
     from Tkinter import *
 
 def serve_forever():
+    #TODO: remove import * for socket
     myHost = '127.0.0.1'
     myPort = 50007
     sockobj = socket(AF_INET, SOCK_STREAM)
+    # the SO_REUSEADDR flag tells the kernel to reuse a local socket in TIME_WAIT state, without waiting
+    # for its natural timeout to expire. Preventing the OSError: [Errno 98] Address already in use
+    sockobj.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
     sockobj.bind((myHost, myPort))
     sockobj.listen(5)
     return sockobj

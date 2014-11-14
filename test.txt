@@ -1,8 +1,8 @@
 [
     {
         "header": "measurements", 
-        "blood pressure": "12", 
         "time": "Tue Nov  4 21:22:15 2014", 
+        "blood pressure": "12", 
         "weight": "1", 
         "height": "test"
     }, 
@@ -37,5 +37,21 @@
         "height": "12 feet", 
         "header": "measurements", 
         "time": "Thu Nov 13 21:17:04 2014"
+    }, 
+    {
+        "username": "test", 
+        "weight": "", 
+        "blood pressure": "", 
+        "height": "", 
+        "header": "measurements", 
+        "time": "Thu Nov 13 21:28:29 2014"
+    }, 
+    {
+        "username": "test", 
+        "weight": "best", 
+        "blood pressure": "around", 
+        "height": "the", 
+        "header": "measurements", 
+        "time": "Thu Nov 13 21:44:16 2014"
     }
 ]
