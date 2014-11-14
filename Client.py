@@ -89,13 +89,22 @@ class Login:
             measure.add_command(label='Last', command=lambda:self.get_measurement(), underline=0, state='active')
 
     def logout(self):
-        if messagebox.askyesno("Logout", "Logout?"):
-            self.login_info['authenticated'] = False
-            self.make_menu()
+        try:
+            if messagebox.askyesno("Logout", "Logout?"):
+                self.login_info['authenticated'] = False
+                self.make_menu()
+        except NameError:
+            if tkMessageBox.askyesno("Logout", "Logout?"):
+                self.login_info['authenticated'] = False
+                self.make_menu()
 
     def save(self):
-        if messagebox.askyesno("Save", "Save?"):
-            self.master.destroy()
+        try:
+            if messagebox.askyesno("Save", "Save?"):
+                self.master.destroy()
+        except NameError:
+            if tkMessageBox.askyesno("Save", "Save?"):
+                self.master.destroy()
 
     def verify(self):
         self.login_info['username'] = str(self.user_entry.get())
@@ -103,11 +112,17 @@ class Login:
         reply = self.send_data(self.login_info)
         if reply['authenticated'] == True:
             self.login_info['authenticated'] = True
-            messagebox.showinfo("Logged In", "You have successfully logged in")
+            try:
+                messagebox.showinfo("Logged In", "You have successfully logged in")
+            except NameError:
+                tkMessageBox.showinfo("Logged In", "You have successfully logged in")
             self.login_window.destroy()
             self.make_menu()
         else:
-            messagebox.showerror("Invalid Name/ID", "You have entered an invalid Name/ID, please try again")
+            try:
+                messagebox.showerror("Invalid Name/ID", "You have entered an invalid Name/ID, please try again")
+            except NameError:
+                tkMessageBox.showerror("Invalid Name/ID", "You have entered an invalid Name/ID, please try again")
 
     def measure(self, master):
         self.measure_window = Toplevel(master)
@@ -139,10 +154,17 @@ class Login:
     def get_measurement(self):
         measurements = self.send_data({'username' : self.login_info['username'],
                    'header' : 'get measurements'})
-        messagebox.showinfo('Measurement', 'Name: ' + self.login_info['username'] +
-                            '\nHeight: ' + measurements['height'] +
-                            '\nWeight: ' + measurements['weight'] +
-                            '\nBlood Pressure: ' + measurements['blood pressure'])
+        try:
+            messagebox.showinfo('Measurement', 'Name: ' + self.login_info['username'] +
+                                '\nHeight: ' + measurements['height'] +
+                                '\nWeight: ' + measurements['weight'] +
+                                '\nBlood Pressure: ' + measurements['blood pressure'])
+        except NameError:
+            tkMessageBox.showinfo('Measurement', 'Name: ' + self.login_info['username'] +
+                                '\nHeight: ' + measurements['height'] +
+                                '\nWeight: ' + measurements['weight'] +
+                                '\nBlood Pressure: ' + measurements['blood pressure'])
+
 
     def send_data(self, raw_data):
         data = json.dumps(raw_data)
