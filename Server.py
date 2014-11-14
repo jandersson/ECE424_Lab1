@@ -1,11 +1,18 @@
 __author__ = 'Jonas Andersson'
 
-import time, _thread as thread
+import time
+try:
+    import thread
+except ImportError:
+    import _thread as thread
 import json  #handles serializing and sending/receiving JSON data
 from socket import *
-from tkinter import *
+try:
+    from tkinter import *
+except ImportError:
+    from Tkinter import *
 
-myHost = ''
+myHost = '127.0.0.1'
 myPort = 50007
 
 sockobj = socket(AF_INET, SOCK_STREAM)

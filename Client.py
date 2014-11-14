@@ -1,10 +1,21 @@
 __author__ = 'Jonas Andersson'
 
-import _thread as thread, socket
-from tkinter import *  # get widget classes
-from tkinter import messagebox
+try:
+    import thread
+except ImportError:
+    import _thread as thread
+
+try:
+    from tkinter import *
+    from tkinter import messagebox
+except ImportError:
+    from Tkinter import *
+    import tkMessageBox
+
+import socket
+
 import Server
-import json #used for serializing data for socket buffer
+import json  # used for serializing data for socket buffer
 
 class Login:
 
