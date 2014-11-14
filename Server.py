@@ -45,18 +45,18 @@ def handleClient(connection):
             data['time'] = now()
             current_measures = loadMeasures(data['username'])
             current_measures.append(data)
-            print('File is measurements')
+            print('Message is measurements')
             with open(data['username'] + ".txt", "w") as outfile:
                 json.dump(current_measures, outfile, indent=4)
                 reply = json.dumps(data)
         if data['header'] == 'get measurements':
-            print('File is data request')
+            print('Message is data request')
             measurements = loadMeasures(data['username'])
             #Get only the last item in the measurements list (the latest one)
             measurements = measurements[-1]
             reply = json.dumps(measurements)
         if data['header'] == 'login info':
-            print('File is authentication request')
+            print('Message is authentication request')
             data['authenticated'] = verify(data)
             reply = json.dumps(data)
         connection.send(reply.encode())
