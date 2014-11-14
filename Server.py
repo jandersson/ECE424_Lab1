@@ -6,7 +6,7 @@ try:
     import thread
 except ImportError:
     import _thread as thread
-import json  #handles serializing and sending/receiving JSON data
+import json  # handles serializing and sending/receiving JSON data
 from socket import *
 try:
     from tkinter import *
@@ -32,7 +32,8 @@ def now():
 def handleClient(connection):
     while True:
         raw_data = connection.recv(1024).decode()
-        if not raw_data: break
+        if not raw_data:
+            break
         reply = 'error'
         data = json.loads(raw_data)
 
@@ -85,8 +86,9 @@ def makeWindow(myTitle):
     root.mainloop()
 
 
-def loadAccounts(fileName,name,pwd,pri):
-    with open (fileName, 'r') as account_file:
+def loadAccounts(file_name, name, pwd, pri):
+    #TODO: consider deleting this function since it is not used
+    with open(file_name, 'r') as account_file:
         pass
     return
 
