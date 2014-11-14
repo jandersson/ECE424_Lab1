@@ -25,15 +25,15 @@ class Login:
         self.frame = Frame(self.master)
         self.frame.pack()
         self.master.title('Client')
-        self.measurement = {'header' : 'measurements',
-                            'username' : None,
-                            'height' : None,
-                            'weight' : None,
-                            'blood pressure' : None}
-        self.login_info = {'header' : 'login info',
-                           'username' : None,
-                           'password' : None,
-                           'authenticated' : False}
+        self.measurement = {'header': 'measurements',
+                            'username': None,
+                            'height': None,
+                            'weight': None,
+                            'blood pressure': None}
+        self.login_info = {'header': 'login info',
+                           'username': None,
+                           'password': None,
+                           'authenticated': False}
         self.make_menu()
 
     def login(self, master):
