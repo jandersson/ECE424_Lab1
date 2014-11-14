@@ -16,6 +16,7 @@ import socket
 import Server
 import json  # used for serializing data for socket buffer
 
+
 class Login:
 
     def __init__(self, master):
