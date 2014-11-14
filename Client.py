@@ -151,8 +151,8 @@ class Login:
         self.measure_window.wait_window()
 
     def get_measurement(self):
-        measurements = self.send_data({'username' : self.login_info['username'],
-                   'header' : 'get measurements'})
+        measurements = self.send_data({'username': self.login_info['username'],
+                                       'header': 'get measurements'})
         try:
             messagebox.showinfo('Measurement', 'Name: ' + self.login_info['username'] +
                                 '\nHeight: ' + measurements['height'] +
@@ -160,9 +160,9 @@ class Login:
                                 '\nBlood Pressure: ' + measurements['blood pressure'])
         except NameError:
             tkMessageBox.showinfo('Measurement', 'Name: ' + self.login_info['username'] +
-                                '\nHeight: ' + measurements['height'] +
-                                '\nWeight: ' + measurements['weight'] +
-                                '\nBlood Pressure: ' + measurements['blood pressure'])
+                                  '\nHeight: ' + measurements['height'] +
+                                  '\nWeight: ' + measurements['weight'] +
+                                  '\nBlood Pressure: ' + measurements['blood pressure'])
 
 
     def send_data(self, raw_data):
