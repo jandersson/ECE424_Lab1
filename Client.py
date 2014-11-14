@@ -145,9 +145,9 @@ class Login:
         self.bp_entry.grid(column=1, row=2)
 
         #Create Buttons
-        self.enter_button = Button(self.measure_window, text='Enter', command=lambda:self.send_measurement())
+        self.enter_button = Button(self.measure_window, text='Enter', command=lambda: self.send_measurement())
         self.enter_button.grid(column=0, row =3)
-        self.cancel_button = Button(self.measure_window, text='Cancel', command=lambda:self.measure_window.destroy())
+        self.cancel_button = Button(self.measure_window, text='Cancel', command=lambda: self.measure_window.destroy())
         self.cancel_button.grid(column=1, row=3)
         self.measure_window.wait_window()
 
@@ -199,7 +199,6 @@ def makeWindow(myTitle):
     root.mainloop()
 
 if __name__ == '__main__':
-
     thread.start_new_thread(makeWindow, ('Client',))
     Server.start_server()
 

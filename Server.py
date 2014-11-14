@@ -1,7 +1,7 @@
 __author__ = 'Jonas Andersson'
 
 import time
-import sqlite3
+import dbTools
 try:
     import thread
 except ImportError:
@@ -12,6 +12,9 @@ try:
     from tkinter import *
 except ImportError:
     from Tkinter import *
+
+def dblogin():
+
 
 def serve_forever():
     #TODO: remove import * for socket
