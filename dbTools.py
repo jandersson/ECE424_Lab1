@@ -19,3 +19,16 @@ def make_tables():
     conn.commit()
     cursor.close()
     conn.close()
+
+def get_login(login_info):
+    '''
+    Takes a dictionary, login info, which contains the username and password supplied by the user
+    :param login_info:
+    :return:
+    '''
+    conn, cursor = login()
+    cursor.execute('SELECT * FROM users WHERE name =:name and password =:password', {'name': login_info['username'],
+                                                                                     'password': login_info['password']})
+    result = cursor.fetchone()
+    print('login result: ' + str(result))
+    return result

@@ -64,18 +64,17 @@ def handleClient(connection):
 
 def verify(login_info):
     '''
-    Verifies the user submitted login info and returns true if verified or false if verification failed
+    Verifies the user submitted login info and returns true if verified or false if verification failed.
+    If the get_login function returns None, no match was found in the database and verification fails
+    If the get_login function returns a tuple, a match was found in the database and the user is verified
     :param login_info:
     :return:
     '''
-    with open("accounts.txt", "r") as account_file:
-        accounts = json.load(account_file)
-    for key,users in accounts.items():
-        for user in users:
-            if (user['username'] == login_info['username']) and (user['password'] == login_info['password']):
-                return True
-    return False
-
+    result = dbTools.get_login(login_info)
+    if not result:
+        return False
+    else:
+        return True
 
 
 def dispatcher(sockobj):
