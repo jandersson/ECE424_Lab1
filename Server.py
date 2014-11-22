@@ -63,6 +63,11 @@ def handleClient(connection):
 
 
 def verify(login_info):
+    '''
+    Verifies the user submitted login info and returns true if verified or false if verification failed
+    :param login_info:
+    :return:
+    '''
     with open("accounts.txt", "r") as account_file:
         accounts = json.load(account_file)
     for key,users in accounts.items():
@@ -103,6 +108,7 @@ def loadMeasures(username):
 
 
 def start_server():
+    dbTools.make_tables()
     sockobj = serve_forever()
     thread.start_new_thread(makeWindow, ('Server',))
     dispatcher(sockobj)
