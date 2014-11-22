@@ -187,8 +187,8 @@ class Login:
         self.measure_window.destroy()
 
     def open_connection(self):
-        sockobj = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #Create a socket object
-        sockobj.connect(('127.0.0.1', 50007)) #Connect to server
+        sockobj = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  #Create a socket object
+        sockobj.connect(('127.0.0.1', 50007))  #Connect to server
         print('Socket created')
         return sockobj
 

@@ -41,13 +41,9 @@ def handleClient(connection):
         #inspect data header and determine action
         if data['header'] == 'measurements':
             data['time'] = now()
-            current_measures = loadMeasures(data['username'])
-            current_measures.append(data)
             print('Message is measurements')
-            #TODO: Put this into database instead of flat file
-            with open(data['username'] + ".txt", "w") as outfile:
-                json.dump(current_measures, outfile, indent=4)
-                reply = json.dumps(data)
+            dbTools.insert_measurements(data)
+            reply = json.dumps(data)
         if data['header'] == 'get measurements':
             #TODO: Get data from db instead of flat file
             print('Message is data request')
@@ -99,6 +95,8 @@ def loadAccounts(file_name, name, pwd, pri):
         pass
     return
 
+def insert_measurements():
+    pass
 
 def loadMeasures(username):
     print('Loading measurements for ' + username)
