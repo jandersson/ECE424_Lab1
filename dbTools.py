@@ -7,6 +7,7 @@ make_table_measurements_if_not_exists = 'CREATE TABLE IF NOT EXISTS measurements
                                         ' (patient_name VARCHAR(80), blood_pressure VARCHAR(80),' \
                                         'height VARCHAR(80), weight VARCHAR(80))'
 
+
 def login():
     conn = sqlite3.connect('dbaseSQL.db')
     cursor = conn.cursor()
@@ -45,3 +46,16 @@ def insert_measurements(measurements):
                    measurements['weight']))
     conn.commit()
     conn.close()
+
+
+def get_latest_measurement(patient_name):
+    conn, cursor = login()
+    cursor.execute("SELECT * FROM measurements WHERE patient_name = (?) ORDER BY rowid DESC", (patient_name,))
+    result = cursor.fetchone()
+    print('Latest measurement: ' + str(result))
+    if result:
+        measurement = {'username': result[0],
+                       'blood pressure': result[1],
+                       'height': result[2],
+                       'weight': result[3]}
+    return measurement

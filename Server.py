@@ -47,9 +47,10 @@ def handleClient(connection):
         if data['header'] == 'get measurements':
             #TODO: Get data from db instead of flat file
             print('Message is data request')
-            measurements = loadMeasures(data['username'])
-            #Get only the last item in the measurements list (the latest one)
-            measurements = measurements[-1]
+            # measurements = loadMeasures(data['username'])
+            # #Get only the last item in the measurements list (the latest one)
+            # measurements = measurements[-1]
+            measurements = dbTools.get_latest_measurement(data['username'])
             reply = json.dumps(measurements)
         if data['header'] == 'login info':
             print('Message is authentication request')
