@@ -2,6 +2,7 @@ __author__ = "Jonas Andersson"
 
 import sqlite3
 
+database_name = 'medical.sqlite'
 make_table_users_if_not_exists = 'CREATE TABLE IF NOT EXISTS users (name VARCHAR(80), password VARCHAR(80))'
 make_table_measurements_if_not_exists = 'CREATE TABLE IF NOT EXISTS measurements' \
                                         ' (patient_name VARCHAR(80), blood_pressure VARCHAR(80),' \
@@ -9,7 +10,7 @@ make_table_measurements_if_not_exists = 'CREATE TABLE IF NOT EXISTS measurements
 
 
 def login():
-    conn = sqlite3.connect('dbaseSQL.db')
+    conn = sqlite3.connect(database_name)
     cursor = conn.cursor()
     return conn, cursor
 
@@ -18,6 +19,13 @@ def make_tables():
     conn, cursor = login()
     cursor.execute(make_table_users_if_not_exists)
     cursor.execute(make_table_measurements_if_not_exists)
+    #Check if test user is present in database. If it is not, create it
+    cursor.execute('SELECT * FROM users WHERE name = (?) AND password = (?)', ('test', '1234'))
+    result = cursor.fetchone()
+    if result:
+        print('Test user is present in users table')
+    else:
+        cursor.execute('INSERT INTO users (name, password) VALUES (?, ?)', ('test', '1234'))
     conn.commit()
     cursor.close()
     conn.close()
@@ -53,6 +61,7 @@ def get_latest_measurement(patient_name):
     cursor.execute("SELECT * FROM measurements WHERE patient_name = (?) ORDER BY rowid DESC", (patient_name,))
     result = cursor.fetchone()
     print('Latest measurement: ' + str(result))
+    measurement = None
     if result:
         measurement = {'username': result[0],
                        'blood pressure': result[1],
