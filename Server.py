@@ -45,11 +45,7 @@ def handleClient(connection):
             dbTools.insert_measurements(data)
             reply = json.dumps(data)
         if data['header'] == 'get measurements':
-            #TODO: Get data from db instead of flat file
-            print('Message is data request')
-            # measurements = loadMeasures(data['username'])
-            # #Get only the last item in the measurements list (the latest one)
-            # measurements = measurements[-1]
+            print('Message is data retrieval request')
             measurements = dbTools.get_latest_measurement(data['username'])
             reply = json.dumps(measurements)
         if data['header'] == 'login info':
@@ -81,28 +77,12 @@ def dispatcher(sockobj):
         thread.start_new_thread(handleClient, (connection,))
 
 
-
 def makeWindow(myTitle):
     root = Tk()
     root.title(myTitle)
     label1 = Label(root, text='Server is running!')
     label1.pack()
     root.mainloop()
-
-
-def loadAccounts(file_name, name, pwd, pri):
-    #TODO: consider deleting this function since it is not used
-    with open(file_name, 'r') as account_file:
-        pass
-    return
-
-def insert_measurements():
-    pass
-
-def loadMeasures(username):
-    print('Loading measurements for ' + username)
-    with open(username + '.txt', "r") as measurements:
-        return json.load(measurements)
 
 
 def start_server():
