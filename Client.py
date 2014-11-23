@@ -204,6 +204,7 @@ def makeWindow(myTitle):
     root = Tk()
     lab1 = Login(root)
     root.title(myTitle)
+    root.geometry("400x200")
     root.mainloop()
 
 if __name__ == '__main__':

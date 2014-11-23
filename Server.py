@@ -73,7 +73,7 @@ def verify(login_info):
 def dispatcher(sockobj):
     while True:
         connection, address = sockobj.accept()
-        print('Server connected by', address,'at', now())
+        print('Server connected by', address, 'at', now())
         thread.start_new_thread(handleClient, (connection,))
 
 
@@ -90,4 +90,3 @@ def start_server():
     sockobj = serve_forever()
     thread.start_new_thread(makeWindow, ('Server',))
     dispatcher(sockobj)
-
