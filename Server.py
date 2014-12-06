@@ -1,5 +1,7 @@
 __author__ = 'Jonas Andersson'
 
+import ssl
+import pprint
 import time
 import dbTools
 try:
@@ -32,7 +34,8 @@ def now():
 
 def handleClient(connection):
     while True:
-        raw_data = connection.recv(1024).decode()
+        #raw_data = connection.recv(1024).decode()
+        raw_data = connection.read().decode()
         if not raw_data:
             break
         reply = 'error'
@@ -52,7 +55,7 @@ def handleClient(connection):
             print('Message is authentication request')
             data['authenticated'] = verify(data)
             reply = json.dumps(data)
-        connection.send(reply.encode())
+        connection.write(reply.encode())
 
 
 def verify(login_info):
@@ -72,9 +75,30 @@ def verify(login_info):
 
 def dispatcher(sockobj):
     while True:
-        connection, address = sockobj.accept()
-        print('Server connected by', address, 'at', now())
-        thread.start_new_thread(handleClient, (connection,))
+        try:
+            connection, address = sockobj.accept()
+            connstream = ssl.wrap_socket(connection,
+                                     server_side=True,
+                                     certfile="server_cert.pem",
+                                     keyfile="server_cert.pem",
+                                     ca_certs="client_cert.pem",
+                                     cert_reqs=ssl.CERT_REQUIRED)
+            print('Server connected by', address, 'at', now())
+            print(repr(connstream.getpeername()))
+            print(connstream.cipher())
+            print(pprint.pformat(connstream.getpeercert()))
+            thread.start_new_thread(handleClient, (connstream,))
+        except ssl.SSLError:
+            print("Authentication error detected. Logging event")
+            log_error(address)
+
+def log_error(address):
+    try:
+        with open("log.txt", "a") as log:
+            log.write("SSL Error: " + 'Server connected by ' + str(address) + ' at ' + str(now()) + "\n")
+    except IOError:
+        with open("log.txt", "w") as log:
+            log.write("SSL Error: " + 'Server connected by ' + str(address) + ' at ' + str(now()) + "\n")
 
 
 def makeWindow(myTitle):

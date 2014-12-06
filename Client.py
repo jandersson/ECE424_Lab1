@@ -15,7 +15,8 @@ except ImportError:
 import socket
 import Server
 import json  # used for serializing data for socket buffer
-
+import ssl
+import pprint
 
 class Login:
 
@@ -110,19 +111,25 @@ class Login:
         self.login_info['username'] = str(self.user_entry.get())
         self.login_info['password'] = str(self.password_entry.get())
         reply = self.send_data(self.login_info)
-        if reply['authenticated']:
-            self.login_info['authenticated'] = True
-            try:
-                messagebox.showinfo("Logged In", "You have successfully logged in")
-            except NameError:
-                tkMessageBox.showinfo("Logged In", "You have successfully logged in")
-            self.login_window.destroy()
-            self.make_menu()
+        if reply:
+            if reply['authenticated']:
+                self.login_info['authenticated'] = True
+                try:
+                    messagebox.showinfo("Logged In", "You have successfully logged in")
+                except NameError:
+                    tkMessageBox.showinfo("Logged In", "You have successfully logged in")
+                self.login_window.destroy()
+                self.make_menu()
+            else:
+                try:
+                    messagebox.showerror("Invalid Name/ID", "You have entered an invalid Name/ID, please try again")
+                except NameError:
+                    tkMessageBox.showerror("Invalid Name/ID", "You have entered an invalid Name/ID, please try again")
         else:
             try:
-                messagebox.showerror("Invalid Name/ID", "You have entered an invalid Name/ID, please try again")
+                messagebox.showerror("Authentication Error", "SSL Handshake Failed!")
             except NameError:
-                tkMessageBox.showerror("Invalid Name/ID", "You have entered an invalid Name/ID, please try again")
+                tkMessageBox.showerror("Authentication Error", "SSL Handshake Failed!")
 
     def measure(self, master):
         self.measure_window = Toplevel(master)
@@ -175,14 +182,16 @@ class Login:
 
 
     def send_data(self, raw_data):
+        reply = None
         data = json.dumps(raw_data)
         sock = self.open_connection()
-        sock.send(data.encode())
-        print("Data Sent")
-        raw_reply = sock.recv(1024).decode()
-        reply = json.loads(raw_reply)
-        print('Reply received')
-        sock.close()
+        if sock:
+            sock.send(data.encode())
+            print("Data Sent")
+            raw_reply = sock.recv(1024).decode()
+            reply = json.loads(raw_reply)
+            print('Reply received')
+            sock.close()
         return reply
 
     def send_measurement(self):
@@ -195,10 +204,21 @@ class Login:
         self.measure_window.destroy()
 
     def open_connection(self):
-        sockobj = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  #Create a socket object
-        sockobj.connect(('127.0.0.1', 50007))  #Connect to server
-        print('Socket created')
-        return sockobj
+        try:
+            sockobj = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  #Create a socket object
+            ssl_sock = ssl.wrap_socket(sockobj,
+                               certfile="client_cert.pem",
+                               keyfile="client_cert.pem",
+                               ca_certs="server_cert.pem",
+                               cert_reqs=ssl.CERT_REQUIRED)
+            ssl_sock.connect(('127.0.0.1', 50007))  #Connect to server
+            print('SSL Socket created')
+            print(repr(ssl_sock.getpeername()))
+            print(ssl_sock.cipher())
+            print(pprint.pformat(ssl_sock.getpeercert()))
+            return ssl_sock
+        except ssl.SSLError:
+            return None
 
 def makeWindow(myTitle):
     root = Tk()
